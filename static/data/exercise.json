@@ -1,0 +1,22 @@
+[
+    {
+        "population": 145, 
+        "activity": "Running"
+    }, 
+    {
+        "population": 417, 
+        "activity": "Swimming"
+    }, 
+    {
+        "population": 853, 
+        "activity": "Gymnastics"
+    }, 
+    {
+        "population": 452, 
+        "activity": "Walking"
+    }, 
+    {
+        "population": 546, 
+        "activity": "Badminton"
+    }
+]

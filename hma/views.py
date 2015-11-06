@@ -13,6 +13,46 @@ import json
 
 from hma.models import *
 
+def get_exercise_data( location ):
+	import random
+	actlist=['Running', 'Swimming', 'Walking', 'Yoga', 'Gymnastics', 'Bicycling','Badminton']
+	from random import randint
+
+	l = []
+
+	data = {}
+	count = 0
+	temp = []
+	while(1):
+		data = {}
+		# x = randint(0,5)
+		# data['activity'] = actlist[x]
+		s = randint(0,6)
+		if count == 5:
+			break
+		if s in temp:
+			continue
+		else:
+			data['activity'] = actlist[s]
+			data['population'] = randint(0, 1000)
+			l.append(data)
+			count = count + 1
+			temp.append(s)
+
+
+	print l
+
+	with open('exercise.json', 'w') as f:
+		f.write(json.dumps(l, indent=4))
+		f.close()
+
+	import os
+	BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+	p = os.path.join(BASE_DIR, 'exercise.json')
+	path = os.path.join(BASE_DIR, 'static/data/')
+	print os.system('mv '+ p + ' ' + path)
+
 def get_json_ldata( location_list ):
 	"""
 	Function for converting list to json data
@@ -102,10 +142,12 @@ def location( request, entity_slug ):
 	Return : json data for individual location
 	"""
 	location = Location.objects.get( slug=entity_slug )
-	activity_list = location.activity.all()
-	data = get_individual_json_data( location )
-	jsondata = json.dumps( data, indent = 4 )
-	return HttpResponse( jsondata, content_type = 'application/json' )
+	get_exercise_data( location.name )
+	# activity_list = location.activity.all()
+	# data = get_individual_json_data( location )
+	# jsondata = json.dumps( data, indent = 4 )
+	# return HttpResponse( jsondata, content_type = 'application/json' )
+	return render( request, 'location.html', locals() )
 
 def activity(request):
 	"""
