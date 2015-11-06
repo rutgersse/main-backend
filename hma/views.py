@@ -117,3 +117,13 @@ def activity(request):
 	data = get_individual_json_data( activity )
 	jsondata = json.dumps( data, indent = 4 )
 	return HttpResponse( jsondata, content_type = 'application/json' )
+
+def leaderboard( request ):
+	"""
+	Functiona Name : leaderboard
+
+	Args : request
+	Return : leader board
+	"""
+	location_list = Location.objects.order_by('-tweet_count')[:10]
+	return render( request, 'leaderboard.html', locals() )
