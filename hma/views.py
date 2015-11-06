@@ -23,7 +23,8 @@ def get_json_ldata( location_list ):
 			'name' 			: location.get_name(),
 			'url' 			: location.get_url(),
 			'population' 	: location.get_population(),
-			'type'			: location.get_location_type()
+			'type'			: location.get_location_type(),
+			'tweet_count'	: location.tweet_count
 		}
 		# data[ str( idx ) ] = temp
 		data.append(temp)
@@ -40,7 +41,8 @@ def get_json_adata( activity_list ):
 			'url' 			: activity.get_url(),
 			'type'			: activity.get_activity_type(),
 			'hour'			: activity.get_hours(),
-			'locations'		: activity.get_location_list()
+			'locations'		: activity.get_location_list(),
+			'tweet_count'	: activity.tweet_count
 		}
 		# data[ str( idx ) ] = temp
 		data.append(temp)
@@ -117,3 +119,23 @@ def activity(request):
 	data = get_individual_json_data( activity )
 	jsondata = json.dumps( data, indent = 4 )
 	return HttpResponse( jsondata, content_type = 'application/json' )
+
+def leaderboard( request ):
+	"""
+	Functiona Name : leaderboard
+
+	Args : request
+	Return : leader board
+	"""
+	location_list = Location.objects.order_by('-tweet_count')[:10]
+	return render( request, 'leaderboard.html', locals() )
+
+def search( request ):
+	"""
+	Functiona Name : search
+
+	Args : request
+	Return : leader board
+	"""
+	# location_list = Location.objects.order_by('-tweet_count')[:10]
+	return render( request, 'search.html', locals() )
