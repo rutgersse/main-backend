@@ -22,6 +22,8 @@
     <link rel="stylesheet" type="text/css"  href="/static/css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="/static/fonts/font-awesome/css/font-awesome.css">
 
+    <link rel="stylesheet" type="text/css" href="/static/css/menusearch.css">
+
     <!-- Stylesheet
     ================================================== -->
     <link rel="stylesheet" type="text/css"  href="/static/css/style.css">
@@ -39,8 +41,17 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
       <![endif]-->
 
-      <script src="/static/js/d3.js"></script>
+      <script type="text/javascript" src="/static/js/jquery.1.11.1.js"></script>
+
+      <script type="text/javascript" src="/static/js/jquery-1.10.2.min.js"></script>
+
+      <script src="/static/js/handlebars.js"></script>
+            <script type="text/javascript" src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+
+     
+       <script src="/static/js/d3.js"></script>
       <script src="/static/js/tweet.js"></script>
+
       <style>
 
         .background {
@@ -106,12 +117,26 @@
         </nav>
 
         <div class="container">
-         
+
         </div>
       </div>
     </div>
 
+    </br>
+    </br>
+    <div class="container ">
+
+      <div class="form-group col-sm-4 col-sm-offset-4">
+      <form class="" id="search">
+        <input type="text" class="form-control typeahead" placeholder="Search by Location" id="typeahead" data-url="/static/data/stateName.json" usr-url="" />
+        </form>
+      </div>
+    </div>
+
+    </br>
+    </br>
     <div class="container heatmap text-center">
+       <h2>HeatMap for USA</h2>
     </div>
     <script>
       var tweet_count = {};
@@ -228,6 +253,9 @@
 
     <!-- Javascripts
     ================================================== -->
+     <script src="/static/js/typeahead.js"></script>
+      <script src="/static/js/search.js"></script>
+
     <script type="text/javascript" src="/static/js/main.js"></script>
   </body>
 </script>
