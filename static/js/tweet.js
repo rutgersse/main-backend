@@ -81,7 +81,7 @@ window.tweet = {
         "url": "/location/georgia/", 
         "tweet_count": 569, 
         "type": "s", 
-        "name": "Georgia\t", 
+        "name": "Georgia", 
         "population": 9687653
     }, 
     {
