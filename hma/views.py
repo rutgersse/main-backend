@@ -23,7 +23,8 @@ def get_json_ldata( location_list ):
 			'name' 			: location.get_name(),
 			'url' 			: location.get_url(),
 			'population' 	: location.get_population(),
-			'type'			: location.get_location_type()
+			'type'			: location.get_location_type(),
+			'tweet_count'	: location.tweet_count
 		}
 		# data[ str( idx ) ] = temp
 		data.append(temp)
@@ -40,7 +41,8 @@ def get_json_adata( activity_list ):
 			'url' 			: activity.get_url(),
 			'type'			: activity.get_activity_type(),
 			'hour'			: activity.get_hours(),
-			'locations'		: activity.get_location_list()
+			'locations'		: activity.get_location_list(),
+			'tweet_count'	: activity.tweet_count
 		}
 		# data[ str( idx ) ] = temp
 		data.append(temp)
