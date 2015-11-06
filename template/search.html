@@ -38,6 +38,42 @@
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+
+    <script src="/static/js/d3.js"></script>
+<script src="/static/js/tweet.js"></script>
+<style>
+
+.background {
+  fill: none;
+  pointer-events: all;
+}
+
+#states {
+  stroke: #000;
+  stroke-width: 1.5px;
+}
+
+#states text {
+  fill: #000;
+  stroke: none;
+  text-anchor:middle;
+  font-size: 10px;
+}
+
+#states .active {
+  fill: steelblue !important;
+}
+
+#states text.active {
+  font-size: 12px;
+  font-weight:bold;
+  fill: #fff;
+  stroke-width: .5px;
+  fill: #fff !important;
+  stroke: #000;
+}
+
+</style>
  </head>
 
     <div id="tf-home">
@@ -74,6 +110,98 @@
             </div>
         </div>
     </div>
+
+    <div class="container heatmap text-center">
+    </div>
+    <script>
+var tweet_count = {};
+var parade = window.tweet.states;
+for (var i = 0 ; i<parade.length ; i++)
+    tweet_count[parade[i].name] = parade[i].tweet_count;
+
+var width = 960,
+    height = 500,
+    centered;
+
+var projection = d3.geo.albersUsa()
+    .scale(width)
+    .translate([0, 0]);
+
+var path = d3.geo.path()
+    .projection(projection);
+
+var svg = d3.select(".heatmap").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+svg.append("rect")
+    .attr("class", "background")
+    .attr("width", width)
+    .attr("height", height)
+    .on("click", click);
+
+var g = svg.append("g")
+    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
+  .append("g")
+    .attr("id", "states");
+
+d3.json("/static/data/states.json", function(json) {
+  var heatmap = d3.scale.linear()
+    .domain([0,d3.max(json.features, function(d) { return Math.log(tweet_count[d.properties.name] || 1); })])
+    .interpolate(d3.interpolateRgb)
+    .range(["#ffffff","#073f07"])
+  var states = g.selectAll("path")
+    .data(json.features)
+    .enter().append("path")
+      .attr("d", path)
+      .attr("id", function(d) { return d.properties.id; })
+      .style("fill", function(d) { return heatmap(Math.log(tweet_count[d.properties.name] || 1)); })
+      .on("click", click)
+  var labels = g.selectAll("text")
+    .data(json.features)
+    .enter().append("text")
+      .attr("transform", function(d) { return "translate(" + path.centroid(d) + ")"; })
+      .attr("id", function(d) { return 'label-'+d.properties.id; })
+      .attr("dy", ".35em")
+      .on("click", click)
+      .text(function(d) { return d.properties.abbr; });
+});
+
+function click(d) {
+  var x = 0,
+      y = 0,
+      k = 1;
+
+  if (d && centered !== d) {
+    var centroid = path.centroid(d);
+    x = -centroid[0];
+    y = -centroid[1];
+    k = 4;
+    centered = d;
+  } else {
+    centered = null;
+  }
+
+  g.selectAll("path")
+      .classed("active", centered && function(d) { return d === centered; });
+  g.selectAll("text")
+      .text(function(d) { return d.properties.abbr; })
+      .classed("active",false);
+  if (centered) {
+      g.select("#label-"+centered.properties.abbr)
+          .text(function(d) { return d.properties.name+': '+(tweet_count[d.properties.abbr]||'(none)'); })
+          .classed("active", centered && function(d) { return d === centered; });
+  }
+
+  g.transition()
+      .duration(1000)
+      .attr("transform", "scale(" + k + ")translate(" + x + "," + y + ")")
+      .style("stroke-width", 1.5 / k + "px");
+}
+
+
+</script>
+
 
     <nav id="tf-footer">
         <div class="container">
