@@ -40,9 +40,7 @@
     <![endif]-->
  </head>
 
- <body>
-
- 	<div id="tf-home">
+    <div id="tf-home">
         <div class="overlay">
             <div id="sticky-anchor"></div>
             <nav id="tf-menu" class="navbar navbar-default">
@@ -71,29 +69,13 @@
                 </div><!-- /.container-fluid -->
             </nav>
 
-            
+            <div class="container">
+             
+            </div>
         </div>
     </div>
 
-    </br>
-    <div class="container">
-    </div>
-    <div class="container">
-
-	 	<table class="table text-center table-bordered col-sm-6">
-	 		<th class="text-center">State</th>
-	 		<th class="text-center">Tweets</th>
-
-	 	{% for location in location_list %}
-	 		<tr> 
-	 			<td><a href="{{location.get_url}}" style="color:black">{{location.name}}</a> </td>
-	 			<td>{{location.tweet_count}} </td>
-	 		</tr>
-	 	{% endfor %}
- 		</table>
- 	</div>
-
- 	<nav id="tf-footer">
+    <nav id="tf-footer">
         <div class="container">
              <div class="pull-left">
                 <p>2015 © HMS. All Rights Reserved. Designed and Coded by <a href="http://github.com/rutgersse">Rutgers Cyborgs.
@@ -110,7 +92,7 @@
             </div>
         </div>
     </nav>
- 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script type="text/javascript" src="/static/js/jquery.1.11.1.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->

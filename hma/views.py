@@ -127,3 +127,13 @@ def leaderboard( request ):
 	"""
 	location_list = Location.objects.order_by('-tweet_count')[:10]
 	return render( request, 'leaderboard.html', locals() )
+
+def search( request ):
+	"""
+	Functiona Name : search
+
+	Args : request
+	Return : leader board
+	"""
+	# location_list = Location.objects.order_by('-tweet_count')[:10]
+	return render( request, 'search.html', locals() )
