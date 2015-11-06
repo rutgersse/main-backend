@@ -100,6 +100,7 @@ def location( request, entity_slug ):
 	Return : json data for individual location
 	"""
 	location = Location.objects.get( slug=entity_slug )
+	activity_list = location.activity.all()
 	data = get_individual_json_data( location )
 	jsondata = json.dumps( data, indent = 4 )
 	return HttpResponse( jsondata, content_type = 'application/json' )
@@ -112,6 +113,7 @@ def activity(request):
 	Return : json data for individual activity
 	"""
 	activity = Activity.objects.get( slug=entity_slug )
+	location_list = activity.location.all()
 	data = get_individual_json_data( activity )
 	jsondata = json.dumps( data, indent = 4 )
 	return HttpResponse( jsondata, content_type = 'application/json' )

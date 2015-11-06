@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-from django.template.defaultfilters import slugify
+# from django.templatce.defaultfilters import slugify
 
 
 class Location(models.Model):
@@ -10,7 +10,6 @@ class Location(models.Model):
 	location_type 		= models.CharField( max_length=5, blank = True, null = True )
 	population 			= models.IntegerField( default = 0 )
 	last_update_time 	= models.DateTimeField( blank = True, null = True )
-	# Activity 			= models.ManyToManyField( Activity, related_name='activities' )
 	tweet_count			= models.IntegerField( default = 0 )
 	hours 				= models.IntegerField( default = 0 )
 
@@ -42,8 +41,7 @@ class Activity(models.Model):
 	activity_type 		= models.CharField( max_length=5, blank = True, null = True )
 	hours 				= models.IntegerField( blank = True, null = True )
 	last_update_time	= models.DateTimeField( blank = True, null = True )
-	relationships 		= models.ManyToManyField( Location, through = 'Relationship', symmetrical = False, related_name = 'related_to' )
-
+	location 			= models.ManyToManyField( Location, related_name = 'activity' )
 	tweet_count			= models.IntegerField( default = 0 )
 
 	def __unicode__(self):
@@ -86,12 +84,6 @@ class Activity(models.Model):
 # 	last_update_time	= models.DateTimeField()
 # 	time_stamp			= models.DateTimeField()
 
-class Relationship(models.Model):
-    location = models.ForeignKey(Location, related_name='location')
-    activity = models.ForeignKey(Activity, related_name='activity')
-
-    def rel_name(self):
-    	return str(self.location) + ' has ' + str(self.activity)
 
 class Mood(models.Model):
 	location 			= models.ManyToManyField( Location, related_name = 'moods' )

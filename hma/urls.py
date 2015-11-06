@@ -21,7 +21,6 @@ admin.site.register(Location)
 
 admin.site.register(Activity)
 
-admin.site.register(Relationship)
 
 urlpatterns = [
 	url( r'^$', 'hma.views.index', name='index' ),
