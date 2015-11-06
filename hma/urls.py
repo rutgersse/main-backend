@@ -15,8 +15,24 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from hma.models import *
+
+admin.site.register(Location)
+
+admin.site.register(Activity)
+
+admin.site.register(Relationship)
 
 urlpatterns = [
 	url( r'^$', 'hma.views.index', name='index' ),
     url(r'^admin/', include(admin.site.urls)),
+    url( r'^location/all/$', 'hma.views.location_all', name='all location' ),
+    url( r'^activity/all/$', 'hma.views.activity_all', name='all activity' ),
+    url( r'^location/(?P<entity_slug>[a-zA-Z0-9_.-]+)/$', 'hma.views.location', name='location' ),
+    url( r'^activity/(?P<entity_slug>[a-zA-Z0-9_.-]+)/$', 'hma.views.activity', name='activity' ),
+
+    # (?P<entity_slug>[a-zA-Z0-9_.-]+)
+    # url( r'^$', 'hma.views.index', name='index' ),
+    # url( r'^$', 'hma.views.index', name='index' ),
+    # url( r'^$', 'hma.views.index', name='index' ),
 ]
