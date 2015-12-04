@@ -31,6 +31,8 @@ urlpatterns = [
     url( r'^activity/(?P<entity_slug>[a-zA-Z0-9_.-]+)/$', 'hma.views.activity', name='activity' ),
     url( r'^leaderboard/$', 'hma.views.leaderboard', name='leaderboard' ),
     url( r'^search/$', 'hma.views.search', name='search' ),
+    url( r'^trend/$', 'hma.views.trend', name='trend' ),
+    url( r'^trend/(?P<entity_slug>[a-zA-Z0-9_.-]+)/$', 'hma.views.trendajax', name='trendajax' ),
 
     # (?P<entity_slug>[a-zA-Z0-9_.-]+)
     # url( r'^$', 'hma.views.index', name='index' ),

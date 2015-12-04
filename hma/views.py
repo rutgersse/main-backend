@@ -183,3 +183,24 @@ def search( request ):
 	"""
 	# location_list = Location.objects.order_by('-tweet_count')[:10]
 	return render( request, 'search.html', locals() )
+
+def trend( request ):
+	"""
+	Functiona Name : search
+
+	Args : request
+	Return : leader board
+	"""
+	# location_list = Location.objects.order_by('-tweet_count')[:10]
+	return render( request, 'trend.html', locals() )
+
+
+def trendajax( request, entity_slug ):
+	"""
+	Functiona Name : search
+
+	Args : request
+	Return : leader board
+	"""
+	# location_list = Location.objects.order_by('-tweet_count')[:10]
+	return render( request, 'trend.html', locals() )

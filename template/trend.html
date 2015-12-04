@@ -37,24 +37,29 @@
 
       <script type="text/javascript" src="/static/js/jquery.1.11.1.js"></script>
 
-      <script type="text/javascript" src="/static/js/jquery-1.10.2.min.js"></script>
-
-      <script src="/static/js/handlebars.js"></script>
-            <script type="text/javascript" src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 
      
-       <script src="/static/js/d3.js"></script>
 
-     <style>
+      <style>
 
-body {
-  font: 10px sans-serif;
+        .axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
 }
 
-.arc path {
-  stroke: #fff;
+.x.axis path {
+  display: none;
 }
-</style>
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
+      </style>
     </head>
 
     <div id="tf-home">
@@ -99,72 +104,129 @@ body {
 
       <div class="form-group col-sm-4 col-sm-offset-4">
       <form class="" id="search">
-        <input type="text" class="form-control typeahead" placeholder="Search by Location" id="typeahead" data-url="/static/data/stateName.json" usr-url="" />
+        <input type="text" class="form-control typeahead" placeholder="Search Trend by Location" id="typeahead" data-url="/static/data/stateName.json" usr-url="" />
         </form>
       </div>
     </div>
 
     </br>
     </br>
-    <div class="container location text-center">
-       <h2>Popular Activities in {{location.name}}</h2>
-     </br>
-     </br>
+    <div class="container heatmap text-center">
+       <h2>Trend Chart</h2>
     </div>
-    
-    </style>
-<body>
+<script src="https://d3js.org/d3.v3.min.js"></script>
+
+
 <script>
 
-  setTimeout(function(){
-    //do what you need here
+var a = window.location.pathname;
 
-    var width = 960,
-        height = 500,
-        radius = Math.min(width, height) / 2;
+a = a.replace(/\//g,'')
+a = a.replace('trend','')
+var b = a;
+if(a != 'new_jersey' && a != 'new_york'){
+  a = 'state';
+}
 
-    var color = d3.scale.ordinal()
-        .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+var margin = {top: 50, right: 80, bottom: 30, left: 50},
+    width = 1000 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
 
-    var arc = d3.svg.arc()
-        .outerRadius(radius - 10)
-        .innerRadius(0);
+var parseDate = d3.time.format("%d-%b-%y").parse;
 
-    var pie = d3.layout.pie()
-        .sort(null)
-        .value(function(d) { return d.population; });
+var x = d3.time.scale()
+    .range([0, width]);
 
-    var svg = d3.select(".location").append("svg")
-        .attr("width", width)
-        .attr("height", height)
-      .append("g")
-        .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+var y = d3.scale.linear()
+    .range([height, 0]);
 
-        
-    d3.json("/static/data/exercise.json", function(data, error) {
-      console.log(error);
-      data.forEach(function(d) {
-        d.population = +d.population;
-      });
+var color = d3.scale.category10();
 
-      var g = svg.selectAll(".arc")
-          .data(pie(data))
-        .enter().append("g")
-          .attr("class", "arc");
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
 
-      g.append("path")
-          .attr("d", arc)
-          .style("fill", function(d) { return color(d.data.activity); });
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left");
 
-      g.append("text")
-          .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
-          .attr("dy", ".35em")
-          .style("text-anchor", "middle")
-          .text(function(d) { return d.data.activity; });
+var line = d3.svg.line()
+    .interpolate("basis")
+    .x(function(d) { return x(d.date); })
+    .y(function(d) { return y(d.temperature); });
 
-    });
+var svg = d3.select(".heatmap").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-}, 0000);
+d3.tsv("/static/data/" + a + ".tsv", function(error, data) {
+  if (error) throw error;
+
+  color.domain(d3.keys(data[0]).filter(function(key) { return key !== "date"; }));
+
+  data.forEach(function(d) {
+    d.date = parseDate(d.date);
+  });
+
+  var cities = color.domain().map(function(name) {
+    return {
+      name: name,
+      values: data.map(function(d) {
+        return {date: d.date, temperature: +d[name]};
+      })
+    };
+  });
+
+  x.domain(d3.extent(data, function(d) { return d.date; }));
+
+  y.domain([
+    d3.min(cities, function(c) { return d3.min(c.values, function(v) { return v.temperature; }); }),
+    d3.max(cities, function(c) { return d3.max(c.values, function(v) { return v.temperature; }); })
+  ]);
+
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
+
+  svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("Number of Tweets");
+
+  svg.append("text")
+        .attr("x", (width / 2))             
+        .attr("y", 0 - (margin.top / 2))
+        .attr("text-anchor", "middle")  
+        .style("font-size", "16px") 
+        .style("text-decoration", "underline")  
+        .text(b);
+
+  var city = svg.selectAll(".city")
+      .data(cities)
+    .enter().append("g")
+      .attr("class", "city");
+
+  city.append("path")
+      .attr("class", "line")
+      .attr("d", function(d) { return line(d.values); })
+      .style("stroke", function(d) { return color(d.name); });
+
+  city.append("text")
+      .datum(function(d) { return {name: d.name, value: d.values[d.values.length - 1]}; })
+      .attr("transform", function(d) { return "translate(" + x(d.value.date) + "," + y(d.value.temperature) + ")"; })
+      .attr("x", 3)
+      .attr("dy", ".35em")
+      .text(function(d) { return d.name; });
+});
+
 </script>
 
 
@@ -184,15 +246,18 @@ body {
       </div>
     </nav>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script type="text/javascript" src="/static/js/jquery.1.11.1.js"></script>
+   
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script type="text/javascript" src="/static/js/bootstrap.js"></script>
 
     <!-- Javascripts
     ================================================== -->
-     <script src="/static/js/typeahead.js"></script>
-      <script src="/static/js/search.js"></script>
+
+
+      <script src="/static/js/handlebars.js"></script>
+      <script type="text/javascript" src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+      <script src="/static/js/typeahead.js"></script>
+      <script src="/static/js/search_trend.js"></script>
 
     <script type="text/javascript" src="/static/js/main.js"></script>
   </body>

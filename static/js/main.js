@@ -1,9 +1,3 @@
-// Hello.
-//
-// This is The Scripts used for ___________ Theme
-//
-//
-
 function main() {
 
 (function () {
@@ -23,8 +17,8 @@ function main() {
   }
 
   $(function () {
-      $(window).scroll(sticky_relocate);
-      sticky_relocate();
+      // $(window).scroll(sticky_relocate);
+      // sticky_relocate();
   });
 
     
