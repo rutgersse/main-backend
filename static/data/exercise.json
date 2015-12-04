@@ -1,22 +1,22 @@
 [
     {
-        "population": 145, 
-        "activity": "Running"
-    }, 
-    {
-        "population": 417, 
+        "population": 379, 
         "activity": "Swimming"
     }, 
     {
-        "population": 853, 
-        "activity": "Gymnastics"
-    }, 
-    {
-        "population": 452, 
+        "population": 991, 
         "activity": "Walking"
     }, 
     {
-        "population": 546, 
-        "activity": "Badminton"
+        "population": 36, 
+        "activity": "Gymnastics"
+    }, 
+    {
+        "population": 373, 
+        "activity": "Yoga"
+    }, 
+    {
+        "population": 658, 
+        "activity": "Bicycling"
     }
 ]

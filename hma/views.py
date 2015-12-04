@@ -51,6 +51,8 @@ def get_exercise_data( location ):
 
 	p = os.path.join(BASE_DIR, 'exercise.json')
 	path = os.path.join(BASE_DIR, 'static/data/')
+	print path
+	print p
 	print os.system('mv '+ p + ' ' + path)
 
 def get_json_ldata( location_list ):
